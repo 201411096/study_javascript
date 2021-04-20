@@ -115,6 +115,110 @@
             })
         )
         
+        /*
+            4. currying
+
+            javascript에서는 지원되지 않지만, 일급함수의 특성을 가진 언어이기 때문에 구현이 가능
+        */
+
+        // 4-1. _curry, _curryr
+        function _curry(fn){
+            return function(a){
+                return function(b){
+                    return fn(a, b);
+                }
+            }
+        }
+
+        var add = _curry(function(a, b){
+            return a + b;
+        });
+        var add10 = add(10);
+        console.log("add10(5) : " + add10(5));
+        console.log("add(5)(3) : " + add(5)(3));
+
+        function _curry(fn){
+            return function(a, b){
+                if (arguments.length == 2) return fn(a, b);     // javascript arguments 객체는 모든 함수 내에서 이용 가능한 지역 변수입니다.
+                return function(b){
+                    return fn(a, b);
+                }
+            }
+        }
+        /*
+        function _curry(fn){
+            return function(a, b){
+                return arguments.length == 2 ? fn(a, b) : function(b){return fn(a, b); };
+            }
+        }
+        */
+        console.log("add(1, 2) : " + add(1, 2));
+
+        var sub = _curry(function (a, b){
+            return a-b;
+        });
+
+        console.log( "sub(10, 5) : " + sub(10, 5) );
+        var sub7 = sub(7);
+        console.log( "sub7(5) : " + sub7(5) );
+
+        console.log('_curryr ...')
+        function _curryr(fn){
+            return function(a, b){
+                if(arguments.length == 2) return fn(a, b);
+                return function(b){
+                    return fn(b, a)
+                }
+            }
+        }
+
+        var sub = _curryr(function (a, b){
+            return a-b;
+        });
+        console.log( "sub(10, 5) : " + sub(10, 5) );
+        var sub7 = sub(7);
+        console.log( "sub7(5) : " + sub7(5) );
+
+        // 4-2. _get
+        function _get(obj, key){
+            return obj == null ? undefined : obj[key];
+        }
+
+        var user1 = users[0];
+        console.log(user1);
+        console.log(user1.name);
+        console.log(_get(user1, 'name'));
+
+        //console.log(users[10].name);
+        console.log(_get(users[10], 'name'));
+
+        // curryr을 사용한 _get
+        var _get = _curryr(function(obj, key){
+            return obj == null ? undefined : obj[key];
+        });
+
+        var get_name = _get("name");
+
+        console.log("get_name(users[0]) : " + get_name(users[0]));
+        console.log("get_name(users[1]) : " + get_name(users[1]));
+        console.log("get_name(users[2]) : " + get_name(users[2]));
+        
+        console.log(
+            _map(
+                _filter(users, function(user) { return user.age >= 30; } ),
+                _get('name')
+                //function(user) { return user.name; }
+            )
+        );
+        console.log(
+            _map(
+                _filter(users, function(user) { return user.age < 30; } ),
+                _get('age')
+                //function(user) { return user.age; }
+            )
+        );
+
+
     </script>
     
 </body>
