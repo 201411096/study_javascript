@@ -218,6 +218,61 @@
             )
         );
 
+        // console.clear();
+        console.log('_reduce ...');
+        // 5. _reduce
+
+        /*
+            memo = add(0, 1);
+            memo = add(memo, 2);
+            memo = add(memo, 3);
+            return memo
+
+            function _reduce(list, iter, memo){
+                return iter(iter(iter(iter(0, 1), 2), 3), 4);
+            }
+        */
+
+        /*
+        function _reduce(list, iter, memo){
+            _each(list, function(val){
+                memo = iter(memo, val);
+            });
+            return memo;
+        }
+        */
+
+        var slice = Array.prototype.slice;
+        function _rest(list, num){
+            return slice.call(list, num || 1);  // num이 없다면 기본값 1로..
+        }
+
+        function _reduce(list, iter, memo){
+            if(arguments.length == 2){
+                memo = list[0];
+                //list = list.slice(1); // 맨 앞의 요소를 하나 자름, array_like 객체에서는 오류
+                list = _rest(list); // 맨 앞의 요소를 하나 자름
+            }
+            _each(list, function(val){
+                memo = iter(memo, val);
+            });
+            return memo;
+        }
+
+        console.log(
+            _reduce([1, 2, 3], add, 0)
+        );
+
+        console.log(
+            _reduce([1, 2, 3], add, 10)
+        );
+
+        // 마지막 인자가 생략된 경우
+        console.log(
+            "_reduce([1, 2, 3], add) : " + _reduce([1, 2, 3], add)
+        );
+
+        // 6. 파이프라인 만들기
 
     </script>
     
