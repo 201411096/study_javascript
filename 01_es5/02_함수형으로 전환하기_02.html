@@ -273,6 +273,30 @@
         );
 
         // 6. 파이프라인 만들기
+        // 6-1. _pipe
+        function _pipe(){
+            var fns = arguments;
+            return function(arg){
+                return _reduce(fns, function(arg, fn){
+                    return fn(arg);
+                }, arg);
+            }
+        }
+        var f1 = _pipe(
+            function(a) { return a + 1; }, // 1 + 1
+            function(a) { return a * 2; }  // 2 * 2
+        );
+        console.log( f1(1) );
+        var f1 = _pipe(
+            function(a) { return a + 1; }, // 1 + 1
+            function(a) { return a * 2; }, // 2 * 2
+            function(a) { return a * a; }  // 4 * 4
+        );
+        console.log( f1(1) );
+        // 6-2. _go
+        
+        // 6-3. users에 _go 적용
+        // 6-4. 간단한 화살표 함수
 
     </script>
     
