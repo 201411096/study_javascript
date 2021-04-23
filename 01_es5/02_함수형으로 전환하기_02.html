@@ -206,15 +206,13 @@
         console.log(
             _map(
                 _filter(users, function(user) { return user.age >= 30; } ),
-                _get('name')
-                //function(user) { return user.name; }
+                _get('name')    //function(user) { return user.name; }
             )
         );
         console.log(
             _map(
                 _filter(users, function(user) { return user.age < 30; } ),
-                _get('age')
-                //function(user) { return user.age; }
+                _get('age')     //function(user) { return user.age; }
             )
         );
 
@@ -293,10 +291,98 @@
             function(a) { return a * a; }  // 4 * 4
         );
         console.log( f1(1) );
+
         // 6-2. _go
-        
+        console.log("_go ...");
+        function _go(arg){                  // 실행시 함수를 포함해서 여러 인자를 넣게 되는데, 함수리스트는 arguments에서 맨 앞 인자를 빼서 추출하고, 첫 인자만 arg에 담겨져서 넘어가는 형태
+            var fns = _rest(arguments);
+            _pipe.apply(null, fns)(arg);
+        }
+
+        _go(1,
+            function(a){ return a + 1; },
+            function(a){ return a * 2; },
+            function(a){ return a * a; },
+        console.log);
+
         // 6-3. users에 _go 적용
+
+        console.log(
+            _map(
+                _filter(users, function(user) { return user.age >= 30; } ),
+                _get('name')    //function(user) { return user.name; }
+            )
+        );
+        console.log(
+            _map(
+                _filter(users, function(user) { return user.age < 30; } ),
+                _get('age')     //function(user) { return user.age; }
+            )
+        );
+
+        _go(users,
+            function(users){
+                return _filter(users, function(user){
+                    return user.age>=30;
+                });
+            },
+            function(users){
+                return _map(users, _get('name'));
+            },
+            console.log
+        );
+
+        _go(users,
+            function(users){
+                return _filter(users, function(user){
+                    return user.age<30;
+                });
+            },
+            function(users){
+                return _map(users, _get('age'));
+            },
+            console.log
+        );
+
+        console.log(
+            _map([1,2,3], function(val){
+                return val * 2;
+            })
+        );
+
+        var _map = _curryr(_map);
+        var _filter = _curryr(_filter);
+
+        // _curryr을 적용한 _map을 사용
+        console.log(_map(function(val) {return val * 2;} )([1, 2, 3]));
+
+        /*
+        _go(users,
+            function(users){
+                return _filter(users, function(user){
+                    return user.age>=30;
+                });
+            },
+            function(users){
+                return _map(users, _get('name'));
+            },
+            console.log
+        );
+        */
+        _go(users,
+            _filter(function(user){
+                return user.age>=30;
+            }),
+            _map(_get('name')),
+            console.log
+        );
+
         // 6-4. 간단한 화살표 함수
+        _go(users,
+            _filter(user => user.age >= 30),
+            _map(_get('name')),
+            console.log
+        );
 
     </script>
     
