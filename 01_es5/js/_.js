@@ -1,26 +1,3 @@
-function _filter(list, predi){
-    var new_list = [];
-    _each(list, function(val){
-        if(predi(val)) new_list.push(val);
-    });
-    return new_list;
-}
-
-function _map(list, mapper){
-    var new_list = [];
-    _each(list, function(val){
-        new_list.push(mapper(val));
-    });
-    return new_list;
-}
-
-function _each(list, iter){
-    for(var i=0; i<list.length; i++){
-        iter(list[i]);
-    }
-    return list;
-}
-
 function _curry(fn){
     return function(a, b){
         if (arguments.length == 2) return fn(a, b);
@@ -43,8 +20,36 @@ var _get = _curryr(function(obj, key){
     return obj == null ? undefined : obj[key];
 });
 
+function _filter(list, predi){
+    var new_list = [];
+    _each(list, function(val){
+        if(predi(val)) new_list.push(val);
+    });
+    return new_list;
+}
+
+function _map(list, mapper){
+    var new_list = [];
+    _each(list, function(val){
+        new_list.push(mapper(val));
+    });
+    return new_list;
+}
+
+var _length = _get('length');
+
+function _each(list, iter){
+    for(var i=0; i<_length(list); i++){
+        iter(list[i]);
+    }
+    return list;
+}
+
 var _map = _curryr(_map);
 var _filter = _curryr(_filter);
+var _each = _curryr(_each);
+
+var slice = Array.prototype.slice;
 
 function _rest(list, num){
     return slice.call(list, num || 1);  // num이 없다면 기본값 1로..
