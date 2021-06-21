@@ -1,184 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product App</title>
-    <style>
-        body {
-            font-family: tahoma;
-            color:#282828;
-            margin: 0px;
-          }
-          
-          .nav-bar {
-            background: linear-gradient(-90deg, #84CF6A, #16C0B0);
-            height: 60px;
-            margin-bottom: 15px;
-          }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product App</title>
+  <style>
+      body {
+          font-family: tahoma;
+          color:#282828;
+          margin: 0px;
+        }
         
-          .product {
-            display: flex;
-            flex-flow: wrap;
-            padding: 1rem;
-          }
+        .nav-bar {
+          background: linear-gradient(-90deg, #84CF6A, #16C0B0);
+          height: 60px;
+          margin-bottom: 15px;
+        }
+      
+        .product {
+          display: flex;
+          flex-flow: wrap;
+          padding: 1rem;
+        }
+      
+        img {
+          border: 1px solid #d8d8d8;
+          width: 70%;
+          margin: 40px;
+          box-shadow: 0px .5px 1px #d8d8d8;
+        }
         
-          img {
-            border: 1px solid #d8d8d8;
-            width: 70%;
-            margin: 40px;
-            box-shadow: 0px .5px 1px #d8d8d8;
-          }
-          
-          .product-image {
-            width: 80%;
-          }
-          
-          .product-image,
-          .product-info {
-            margin-top: 10px;
-            width: 50%;
-          }
-          
-          .color-box {
-            width: 40px;
-            height: 40px;
-            margin-top: 5px;
-          }
-          
-          .cart {
-            margin-right: 25px;
-            float: right;
-            border: 1px solid #d8d8d8;
-            padding: 5px 20px;
-          }
-          
-          button {
-            margin-top: 30px;
-            border: none;
-            background-color: #1E95EA;
-            color: white;
-            height: 40px;
-            width: 100px;
-            font-size: 14px;
-          } 
-          
-          .disabledButton {
-            background-color: #d8d8d8;
-          }
-          
-          .review-form {
-            width: 400px;
-            padding: 20px;
-            margin: 40px;
-            border: 1px solid #d8d8d8;
-          }
-          
-          input {
-            width: 100%;  
-            height: 25px;
-            margin-bottom: 20px;
-          }
-          
-          textarea {
-            width: 100%;
-            height: 60px;
-          }
+        .product-image {
+          width: 80%;
+        }
         
-          .tab {
-            margin-left: 20px;
-            cursor: pointer;
-          }
+        .product-image,
+        .product-info {
+          margin-top: 10px;
+          width: 50%;
+        }
         
-          .activeTab {
-            color: #16C0B0;
-            text-decoration: underline;
-          }
-    </style>
+        .color-box {
+          width: 40px;
+          height: 40px;
+          margin-top: 5px;
+        }
+        
+        .cart {
+          margin-right: 25px;
+          float: right;
+          border: 1px solid #d8d8d8;
+          padding: 5px 20px;
+        }
+        
+        button {
+          margin-top: 30px;
+          border: none;
+          background-color: #1E95EA;
+          color: white;
+          height: 40px;
+          width: 100px;
+          font-size: 14px;
+        } 
+        
+        .disabledButton {
+          background-color: #d8d8d8;
+        }
+        
+        .review-form {
+          width: 400px;
+          padding: 20px;
+          margin: 40px;
+          border: 1px solid #d8d8d8;
+        }
+        
+        input {
+          width: 100%;  
+          height: 25px;
+          margin-bottom: 20px;
+        }
+        
+        textarea {
+          width: 100%;
+          height: 60px;
+        }
+      
+        .tab {
+          margin-left: 20px;
+          cursor: pointer;
+        }
+      
+        .activeTab {
+          color: #16C0B0;
+          text-decoration: underline;
+        }
+  </style>
 </head>
 <body>
-    <div class="nav-bar"></div>
-    <div id="app">
+  <div class="nav-bar"></div>
+  <div id="app">
+    <product :premium="premium"></product>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    Vue.component('product', {
+      props:{
+        premium: {
+          type: Boolean,
+          requried: true
+        }
+      },
+      template:`
         <div class="product">
-            <div class="product-image">
-                <img v-bind:src="image">
-            </div>
+          <div class="product-image">
+              <img v-bind:src="image">
+          </div>
 
-            <div class="product-info">
-                <h1>{{ title }}</h1>
-                <p v-if="inventory > 10">In Stock</p>
-                <p v-else-if="inventory <=10 && inventory > 0">Almost sold out</p>
-                <p v-else>Out of Stock</p>
+          <div class="product-info">
+              <h1>{{ title }}</h1>
+              <p v-if="inventory > 10">In Stock</p>
+              <p v-else-if="inventory <=10 && inventory > 0">Almost sold out</p>
+              <p v-else>Out of Stock</p>
+              <p> Shipping: {{ shipping }}</p>
 
-                <ul>
-                    <li v-for="detail in details">{{ detail }}</li>
-                </ul>
+              <ul>
+                  <li v-for="detail in details">{{ detail }}</li>
+              </ul>
 
-                <div v-for="(variant, index) in variants" 
-                    :key="variant.variantId"
-                    class="color-box"
-                    :style="{ backgroundColor : variant.variantColor}"
-                    @mouseover="updateProduct(index)">
-                </div>
+              <div v-for="(variant, index) in variants"
+                  :key="variant.variantId"
+                  class="color-box"
+                  :style="{ backgroundColor : variant.variantColor}"
+                  @mouseover="updateProduct(index)">
+              </div>
 
-                <button v-on:click="addToCart" 
-                        :disabled="!inStock"
-                        :class="{disabledButton: !inStock}">Add to Cart</button>
-                <div class="cart">
-                    <p>Cart( {{cart}} )</p>
-                </div>
+              <button v-on:click="addToCart" 
+                      :disabled="!inStock"
+                      :class="{disabledButton: !inStock}">Add to Cart</button>
+              <div class="cart">
+                  <p>Cart( {{cart}} )</p>
+              </div>
 
-            </div>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data : {
-                brand: 'Vue Mastery',
-                product: 'socks',
-                selectedVariant : 0,
-                inventory: 0,
-                details: ["80% cotton", "20% polyester", "Gender-neutral"],
-                variants : [
-                    {
-                        variantId: 2234,
-                        variantColor: "green",
-                        variantImage: "./assets/vmSocks-green.jpg",
-                        variantQuantity: 10
-                    },
-                    {
-                        variantId: 2235,
-                        variantColor: "blue",
-                        variantImage: "./assets/vmSocks-blue.jpg",
-                        variantQuantity: 0
-                    }
-                ],
-                cart: 0
-            },
-            methods:{
-                addToCart: function(){
-                    this.cart += 1;
-                },
-                updateProduct: function(index){
-                    this.selectedVariant = index;
-                    console.log(index);
-                }
-            },
-            computed: {
-              title(){
-                return this.brand + " " + this.product;
+          </div>
+      </div>        
+      `,
+      data : function() {
+        return {
+          brand: 'Vue Mastery',
+          product: 'socks',
+          selectedVariant : 0,
+          inventory: 0,
+          details: ["80% cotton", "20% polyester", "Gender-neutral"],
+          variants : [
+              {
+                variantId: 2234,
+                variantColor: "green",
+                variantImage: "./assets/vmSocks-green.jpg",
+                variantQuantity: 10
               },
-              image(){
-                return this.variants[this.selectedVariant].variantImage;
-              },
-              inStock(){
-                return this.variants[this.selectedVariant].variantQuantity;
+              {
+                variantId: 2235,
+                variantColor: "blue",
+                variantImage: "./assets/vmSocks-blue.jpg",
+                variantQuantity: 0
               }
-            }
-        })
-    </script>
+          ],
+          cart: 0
+        }
+      },
+      methods:{
+          addToCart: function(){
+            this.cart += 1;
+          },
+          updateProduct: function(index){
+            this.selectedVariant = index;
+            console.log(index);
+          }
+      },
+      computed: {
+        title(){
+          return this.brand + " " + this.product;
+        },
+        image(){
+          return this.variants[this.selectedVariant].variantImage;
+        },
+        inStock(){
+          return this.variants[this.selectedVariant].variantQuantity;
+        },
+        shipping(){
+          if(this.premium){
+            return "Free";
+          }
+          return 2.99;
+        }
+      }
+
+    })
+
+    var app = new Vue({
+        el: '#app',
+        data : {
+          premium: false
+        }
+      })
+  </script>
 </body>
 </html>
