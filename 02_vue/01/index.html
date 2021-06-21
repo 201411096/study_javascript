@@ -100,7 +100,10 @@
 <body>
   <div class="nav-bar"></div>
   <div id="app">
-    <product :premium="premium"></product>
+    <div class="cart">
+      <p>Cart( {{cart.length}} )</p>
+    </div>
+    <product :premium="premium" @add-to-cart="updateCart"></product>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
@@ -138,9 +141,6 @@
               <button v-on:click="addToCart" 
                       :disabled="!inStock"
                       :class="{disabledButton: !inStock}">Add to Cart</button>
-              <div class="cart">
-                  <p>Cart( {{cart}} )</p>
-              </div>
 
           </div>
       </div>        
@@ -165,13 +165,12 @@
                 variantImage: "./assets/vmSocks-blue.jpg",
                 variantQuantity: 0
               }
-          ],
-          cart: 0
+          ]
         }
       },
       methods:{
           addToCart: function(){
-            this.cart += 1;
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId); // 첫번째 파라미터 : 이벤트의 이름, 두번째 파라미터부터는 상위 컴포넌트에서 실행하는 함수에 전달할 파라미터들
           },
           updateProduct: function(index){
             this.selectedVariant = index;
@@ -201,7 +200,13 @@
     var app = new Vue({
         el: '#app',
         data : {
-          premium: false
+          premium: false,
+          cart: []
+        },
+        methods:{
+          updateCart: function(id){
+            this.cart.push(id)
+          }
         }
       })
   </script>
