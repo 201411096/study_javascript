@@ -106,7 +106,7 @@
             </div>
 
             <div class="product-info">
-                <h1>{{ brand }} {{ product }}</h1>
+                <h1>{{ title }}</h1>
                 <p v-if="inventory > 10">In Stock</p>
                 <p v-else-if="inventory <=10 && inventory > 0">Almost sold out</p>
                 <p v-else>Out of Stock</p>
@@ -115,11 +115,11 @@
                     <li v-for="detail in details">{{ detail }}</li>
                 </ul>
 
-                <div v-for="variant in variants" 
+                <div v-for="(variant, index) in variants" 
                     :key="variant.variantId"
                     class="color-box"
                     :style="{ backgroundColor : variant.variantColor}"
-                    @mouseover="updateProduct(variant.variantImage)">
+                    @mouseover="updateProduct(index)">
                 </div>
 
                 <button v-on:click="addToCart" 
@@ -139,20 +139,21 @@
             data : {
                 brand: 'Vue Mastery',
                 product: 'socks',
-                image: './assets/vmSocks-green.jpg',
+                selectedVariant : 0,
                 inventory: 0,
-                inStock: false,
                 details: ["80% cotton", "20% polyester", "Gender-neutral"],
                 variants : [
                     {
                         variantId: 2234,
                         variantColor: "green",
-                        variantImage: "./assets/vmSocks-green.jpg"
+                        variantImage: "./assets/vmSocks-green.jpg",
+                        variantQuantity: 10
                     },
                     {
                         variantId: 2235,
                         variantColor: "blue",
-                        variantImage: "./assets/vmSocks-blue.jpg"
+                        variantImage: "./assets/vmSocks-blue.jpg",
+                        variantQuantity: 0
                     }
                 ],
                 cart: 0
@@ -161,9 +162,21 @@
                 addToCart: function(){
                     this.cart += 1;
                 },
-                updateProduct: function(variantImage){
-                    this.image = variantImage;
+                updateProduct: function(index){
+                    this.selectedVariant = index;
+                    console.log(index);
                 }
+            },
+            computed: {
+              title(){
+                return this.brand + " " + this.product;
+              },
+              image(){
+                return this.variants[this.selectedVariant].variantImage;
+              },
+              inStock(){
+                return this.variants[this.selectedVariant].variantQuantity;
+              }
             }
         })
     </script>
